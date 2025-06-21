@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Award Badges</title>
+    <style>
+      /* Base styles */
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Navigation Styles */
+      .nav-bar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 80px;
+        background-color: rgb(33, 110, 13);
+      }
+
+      .nav-list {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-item {
+        list-style: none;
+        margin: 0 23px;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        color: beige;
+      }
+
+      .nav-link:hover {
+        text-decoration: underline;
+        color: lavenderblush;
+        font-size: 1.03rem;
+      }
+
+      .logo-text {
+        font-size: 2rem;
+        color: white;
+        font-weight: bold;
+      }
+      .quiz-page-wrapper {
+        min-height: 100vh;
+        background-color: #f3f4f6;
+        padding: 2rem;
+        font-family: sans-serif;
+      }
+
+      /* Container for Quiz Cards */
+      .quiz-card-grid {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 72rem;
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+
+      @media (min-width: 768px) {
+        .quiz-card-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .quiz-card-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      .quiz-card {
+        border-radius: 0.5rem;
+        background-color: #fff;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      .quiz-date {
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      .quiz-title {
+        margin-bottom: 1.5rem;
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      /* Circular Progress Bar */
+      .progress-circle-wrapper {
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1.5rem;
+        height: 8rem;
+        width: 8rem;
+      }
+
+      .progress-circle-svg {
+        height: 100%;
+        width: 100%;
+        transform: rotate(-90deg);
+      }
+
+      .progress-circle-bg {
+        stroke-width: 8;
+        stroke: #d1d5db;
+        fill: transparent;
+      }
+
+      .progress-circle-fill {
+        stroke-width: 8;
+        stroke: #2563eb;
+        fill: transparent;
+        transition: stroke-dashoffset 0.5s ease-in-out;
+      }
+
+      .score-display-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: #f97316;
+      }
+
+      /* Quiz Result Text */
+      .result-text {
+        margin-bottom: 1.5rem;
+        font-size: 1.25rem;
+        color: #374151;
+      }
+
+      .result-text strong {
+        font-weight: 700;
+      }
+
+      .congratulations-text {
+        margin-bottom: 2rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #16a34a;
+      }
+
+      /* Quiz Action Button */
+      .quiz-action-btn {
+        width: 100%;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        color: #fff;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: none;
+        outline: none;
+        transition: background-color 300ms ease;
+      }
+
+      .btn-blue {
+        background-color: #2563eb;
+        cursor: pointer;
+      }
+
+      .btn-blue:hover {
+        background-color: #1d4ed8;
+      }
+
+      .btn-blue:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
+      }
+
+      .btn-gray-disabled {
+        background-color: #9ca3af;
+        cursor: not-allowed;
+      }
+
+      /* Custom Alert Modal */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(17, 24, 39, 0.5);
+      }
+
+      .modal-content {
+        width: 24rem;
+        border-radius: 0.5rem;
+        background-color: #fff;
+        padding: 1.5rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      }
+
+      .modal-title {
+        margin-bottom: 1rem;
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .modal-message {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: #374151;
+      }
+
+      .modal-actions {
+        display: flex;
+        justify-content: center;
+      }
+
+      .modal-btn {
+        border-radius: 0.5rem;
+        background-color: #2563eb;
+        /padding: 0.5rem 1.5rem;
+        color: #fff;
+        transition: background-color 300ms ease;
+        border: none;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .modal-btn:hover {
+        background-color: #1d4ed8;
+      }
+
+      .modal-btn:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
+      }
+
+      /* Utility classes for display and visibility */
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="nav-bar">
+        <div class="logo-text">Welcome to LMS</div>
+        <div class="right">
+          <ul class="nav-list">
+            <li class="nav-item">
+              <a href="index.html" class="nav-link">HOME</a>
+            </li>
+            <li class="nav-item">
+              <a href="course.html" class="nav-link">COURSES</a>
+            </li>
+            <li class="nav-item">
+              <a href="quiz.html" class="nav-link" style="font-weight: 800"
+                >QUIZ</a
+              >
+            </li>
+            <li class="nav-item">
+              <a href="badge.html" class="nav-link">MY BADGES</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <div class="quiz-page-wrapper">
+      <div class="quiz-card-grid">
+        <div class="quiz-card">
+          <div class="quiz-date">June 18, 2025</div>
+          <div class="quiz-title">Result</div>
+          <div class="progress-circle-wrapper">
+            <svg class="progress-circle-svg" viewBox="0 0 100 100">
+              <circle
+                class="progress-circle-bg"
+                stroke-width="8"
+                stroke="currentColor"
+                fill="transparent"
+                r="40"
+                cx="50"
+                cy="50"
+              ></circle>
+              <circle
+                class="progress-circle-fill"
+                stroke-width="8"
+                stroke="currentColor"
+                fill="transparent"
+                r="40"
+                cx="50"
+                cy="50"
+                stroke-dasharray="251.2"
+                stroke-dashoffset="50.24"
+                data-quiz-score="4"
+                data-quiz-total="5"
+              ></circle>
+            </svg>
+            <div class="score-display-overlay" data-quiz-display="4/5">4/5</div>
+          </div>
+          <p class="result-text">
+            You got <strong data-percentage>80%</strong> of the answers correct.
+          </p>
+          <p class="congratulations-text">Congratulations!</p>
+          <button
+            class="quiz-action-btn btn-gray-disabled"
+            disabled
+            data-score="80"
+          >
+            Retake test to earn a Badge
+          </button>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-date">June 17, 2025</div>
+          <div class="quiz-title">Result</div>
+          <div class="progress-circle-wrapper">
+            <svg class="progress-circle-svg" viewBox="0 0 100 100">
+              <circle
+                class="progress-circle-bg"
+                stroke-width="8"
+                stroke="currentColor"
+                fill="transparent"
+                r="40"
+                cx="50"
+                cy="50"
+              ></circle>
+              <circle
+                class="progress-circle-fill"
+                stroke-width="8"
+                stroke="currentColor"
+                fill="transparent"
+                r="40"
+                cx="50"
+                cy="50"
+                stroke-dasharray="251.2"
+                stroke-dashoffset="25.12"
+                data-quiz-score="4.5"
+                data-quiz-total="5"
+              ></circle>
+            </svg>
+            <div class="score-display-overlay" data-quiz-display="4.5/5">
+              4.5/5
+            </div>
+          </div>
+          <p class="result-text">
+            You got <strong data-percentage>90%</strong> of the answers correct.
+          </p>
+          <p class="congratulations-text">Congratulations!</p>
+          <button class="quiz-action-btn btn-blue" data-score="90">
+            Earn Badge
+          </button>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-date">June 16, 2025</div>
+          <div class="quiz-title">Result</div>
+          <div class="progress-circle-wrapper">
+            <svg class="progress-circle-svg" viewBox="0 0 100 100">
+              <circle
+                class="progress-circle-bg"
+                stroke-width="8"
+                stroke="currentColor"
+                fill="transparent"
+                r="40"
+                cx="50"
+                cy="50"
+              ></circle>
+              <circle
+                class="progress-circle-fill"
+                stroke-width="8"
+                stroke="currentColor"
+                fill="transparent"
+                r="40"
+                cx="50"
+                cy="50"
+                stroke-dasharray="251.2"
+                stroke-dashoffset="100.48"
+                data-quiz-score="3"
+                data-quiz-total="5"
+              ></circle>
+            </svg>
+            <div class="score-display-overlay" data-quiz-display="3/5">3/5</div>
+          </div>
+          <p class="result-text">
+            You got <strong data-percentage>60%</strong> of the answers correct.
+          </p>
+          <p class="congratulations-text">Keep trying!</p>
+          <button
+            class="quiz-action-btn btn-gray-disabled"
+            disabled
+            data-score="60"
+          >
+            Retake test to earn a Badge
+          </button>
+        </div>
+      </div>
+      <div id="custom-alert-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <div class="modal-title" id="custom-alert-title"></div>
+          <p class="modal-message" id="custom-alert-message"></p>
+          <div class="modal-actions">
+            <button class="modal-btn" id="custom-alert-ok-btn">OK</button>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const earnedBadges =
+          JSON.parse(localStorage.getItem("earnedBadges")) || [];
+
+        function showAlert(title, message) {
+          const modal = document.getElementById("custom-alert-modal");
+          document.getElementById("custom-alert-title").innerText = title;
+          document.getElementById("custom-alert-message").innerText = message;
+          modal.classList.remove("hidden");
+
+          document.getElementById("custom-alert-ok-btn").onclick = () => {
+            modal.classList.add("hidden");
+          };
+          modal.onclick = (event) => {
+            if (event.target === modal) {
+              modal.classList.add("hidden");
+            }
+          };
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+          const quizSections = document.querySelectorAll(".quiz-card");
+
+          quizSections.forEach((section) => {
+            const scoreCircle = section.querySelector(
+              "circle[data-quiz-score]"
+            );
+            const scoreDisplay = section.querySelector("[data-quiz-display]");
+            const percentageSpan = section.querySelector("[data-percentage]");
+            const actionButton = section.querySelector(".quiz-action-btn");
+
+            const quizScore = parseFloat(scoreCircle.dataset.quizScore);
+            const quizTotal = parseFloat(scoreCircle.dataset.quizTotal);
+            const percentage = (quizScore / quizTotal) * 100;
+
+            // Update displayed percentage
+            percentageSpan.textContent = `${percentage}%`;
+
+            // Calculate stroke-dashoffset for SVG circle to represent progress
+            const radius = parseFloat(scoreCircle.getAttribute("r"));
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percentage / 100) * circumference;
+            scoreCircle.style.strokeDasharray = circumference; 
+            scoreCircle.style.strokeDashoffset = offset;
+
+            // Update score display
+            scoreDisplay.textContent = `${quizScore}/${quizTotal}`;
+
+            // Adjust button based on score
+            if (percentage >= 90) {
+              actionButton.textContent = "Earn Badge";
+              actionButton.classList.remove("btn-gray-disabled");
+              actionButton.classList.add("btn-blue");
+              actionButton.disabled = false;
+
+              actionButton.addEventListener("click", () => {
+                const newBadge = {
+                  name: "Quiz Master Badge",
+                  date: new Date().toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }),
+                };
+                earnedBadges.push(newBadge);
+                localStorage.setItem(
+                  "earnedBadges",
+                  JSON.stringify(earnedBadges)
+                );
+                showAlert("Congratulations!", "You have earned a Badge!");
+              });
+            } else {
+              actionButton.textContent = "Retake test to earn a Badge";
+              actionButton.classList.remove("btn-blue");
+              actionButton.classList.add("btn-gray-disabled");
+              actionButton.disabled = true;
+
+              actionButton.addEventListener("click", () => {
+                showAlert(
+                  "Eligibility",
+                  "You need to score 90% or more to earn a badge. Please retake the test."
+                );
+              });
+            }
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>

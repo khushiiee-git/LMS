@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Award Badges</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 80px;
+        background-color: rgb(33, 110, 13);
+      }
+
+      nav ul {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+      }
+
+      nav ul li {
+        list-style: none;
+        margin: 0 23px;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        color: beige;
+      }
+
+      nav ul li a:hover {
+        text-decoration: underline;
+        color: lavenderblush;
+        font-size: 1.03rem;
+      }
+
+      .left {
+        font-size: 2rem;
+        color: white;
+        font-weight: bold;
+      }
+
+      .main-content-wrapper {
+        min-height: 100vh;
+        background-color: #f3f4f6;
+        padding: 2rem;
+        font-family: sans-serif;
+      }
+
+      .badge-container {
+        margin: 2rem auto;
+        max-width: 64rem;
+        border-radius: 0.5rem;
+        background-color: #fff;
+        padding: 1.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      .badge-heading {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+      }
+
+      .badge-table {
+        min-width: 100%;
+        table-layout: auto;
+        border-collapse: collapse;
+        border-radius: 0.5rem;
+      }
+
+      .badge-table thead tr {
+        background-color: #3b82f6;
+        color: #fff;
+      }
+
+      .badge-table th {
+        padding: 0.5rem 1rem;
+        text-align: left;
+      }
+
+      .badge-table th:first-child {
+        border-top-left-radius: 0.5rem;
+      }
+
+      .badge-table tbody tr {
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .badge-table tbody tr:hover {
+        background-color: #eff6ff;
+      }
+
+      .badge-table td {
+        padding: 0.75rem 1rem;
+      }
+
+      .no-badges-message {
+        margin-top: 1rem;
+        text-align: center;
+        color: #4b5563;
+      }
+
+      .view-badge-button {
+        border-radius: 0.5rem;
+        background-color: #16a34a;
+        padding: 0.5rem 1rem;
+        color: #fff;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: background-color 300ms ease;
+        border: none;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .view-badge-button:hover {
+        background-color: #15803d;
+      }
+
+      .view-badge-button:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px #fff, 0 0 0 4px #22c55e;
+      }
+
+      .custom-alert-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(17, 24, 39, 0.5);
+      }
+
+      .alert-modal-content {
+        width: 24rem;
+        border-radius: 0.5rem;
+        background-color: #fff;
+        padding: 1.5rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      }
+
+      .alert-modal-title {
+        margin-bottom: 1rem;
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .alert-modal-message {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: #374151;
+      }
+
+      .alert-modal-actions {
+        display: flex;
+        justify-content: center;
+      }
+
+      .alert-modal-button {
+        border-radius: 0.5rem;
+        background-color: #2563eb;
+        padding: 0.5rem 1.5rem;
+        color: #fff;
+        transition: background-color 300ms ease;
+        border: none;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .alert-modal-button:hover {
+        background-color: #1d4ed8;
+      }
+
+      .alert-modal-button:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="left">Welcome to LMS</div>
+        <div class="right">
+          <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="course.html">COURSES</a></li>
+            <li><a href="quiz.html">QUIZ</a></li>
+            <li><a href="badge.html" style="font-weight: 800">MY BADGES</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <div class="main-content-wrapper">
+      <div class="badge-container">
+        <h1 class="badge-heading">My Earned Badges</h1>
+
+        <div class="table-responsive">
+          <table class="badge-table">
+            <thead>
+              <tr>
+                <th class="th-start-radius">Badge Name</th>
+                <th>Date Earned</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="badges-table-body"></tbody>
+          </table>
+          <p id="no-badges-message" class="no-badges-message hidden">
+            No badges earned yet. Complete quizzes to earn your first badge!
+          </p>
+        </div>
+      </div>
+      <div id="custom-alert-modal" class="custom-alert-modal hidden">
+        <div class="alert-modal-content">
+          <div class="alert-modal-title" id="custom-alert-title"></div>
+          <p class="alert-modal-message" id="custom-alert-message"></p>
+          <div class="alert-modal-actions">
+            <button class="alert-modal-button" id="custom-alert-ok-btn">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function showAlert(title, message) {
+          const modal = document.getElementById("custom-alert-modal");
+          document.getElementById("custom-alert-title").innerText = title;
+          document.getElementById("custom-alert-message").innerText = message;
+          modal.classList.remove("hidden");
+
+          document.getElementById("custom-alert-ok-btn").onclick = () => {
+            modal.classList.add("hidden");
+          };
+
+          modal.onclick = (event) => {
+            if (event.target === modal) {
+              modal.classList.add("hidden");
+            }
+          };
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+          const badgesTableBody = document.getElementById("badges-table-body");
+          const noBadgesMessage = document.getElementById("no-badges-message");
+
+          const earnedBadges =
+            JSON.parse(localStorage.getItem("earnedBadges")) || [];
+
+          if (earnedBadges.length === 0) {
+            noBadgesMessage.classList.remove("hidden");
+          } else {
+            earnedBadges.forEach((badge) => {
+              const row = document.createElement("tr");
+              row.classList.add("table-body-row");
+
+              row.innerHTML = `
+            <td>${badge.name}</td>
+            <td>${badge.date}</td>
+            <td>
+              <button class="view-badge-button" data-badge-name="${badge.name}">View Badge</button>
+            </td>
+          `;
+              badgesTableBody.appendChild(row);
+            });
+
+            document
+              .querySelectorAll(".view-badge-button")
+              .forEach((button) => {
+                button.addEventListener("click", () => {
+                  const badgeName = button.dataset.badgeName;
+                  showAlert("Badge Details", `You earned the "${badgeName}"!`);
+                });
+              });
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>
