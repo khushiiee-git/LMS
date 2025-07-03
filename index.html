@@ -3,52 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Award Badges</title>
+    <title>Welcome to Biz4U LMS</title>
     <style>
-            nav {
-              display: flex;
-              justify-content: space-around;
-              align-items: center;
-              height: 80px;
-              background-color: rgb(33, 110, 13);
-            }
-            nav ul {
-              display: flex;
-              justify-content: center;
-            }
-            nav ul li {
-              list-style: none;
-              margin: 0 23px;
-            }
-            nav ul li a {
-              text-decoration: none;
-              color: beige;
-            }
-            nav ul li a:hover {
-              text-decoration: underline;
-              color: lavenderblush;
-              font-size: 1.03rem;
-            }
-            .left {
-              font-size: 2rem;
-              color: white;
-              font-weight: bold;
-            }
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f3f4f6;
+      }
+
+      .welcome-container {
+        text-align: center;
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      .logo {
+        margin-bottom: 20px;
+      }
+
+      .logo img {
+        max-width: 150px;
+        height: auto;
+      }
+
+      .welcome-title {
+        font-size: 2.5rem;
+        color: #1f2937;
+        margin-bottom: 15px;
+      }
+
+      .welcome-message {
+        font-size: 1.1rem;
+        color: #4b5563;
+        margin-bottom: 30px;
+      }
+
+      .start-button {
+        display: inline-block;
+        padding: 12px 25px;
+        background-color: #2563eb;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease;
+      }
+
+      .start-button:hover {
+        background-color: #1d4ed8;
+      }
     </style>
   </head>
   <body>
-    <header>
-      <nav>
-        <div class="left">Welcome to LMS</div>
-        <div class="right">
-          <ul>
-            <li><a href="index.html" style="font-weight: 800">HOME</a></li>
-            <li><a href="course.html">COURSES</a></li>
-            <li><a href="quiz.html">QUIZ</a></li>
-            <li><a href="badge.html">MY BADGES</a></li>
-          </ul>
-        </div>
-      </nav>
-    </header>
+    <div class="welcome-container">
+      <div class="logo">
+        <img src="bizlogo.jpeg" alt="Biz4U Logo" />
+      </div>
+      <h1 class="welcome-title">Welcome to Biz4U LMS</h1>
+      <p class="welcome-message">Your journey to knowledge begins here.</p>
+      <a href="dashboard.html" class="start-button">Go to Dashboard</a>
+    </div>
   </body>
 </html>
