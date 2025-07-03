@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Biz4U LMS</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #f3f4f6;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: 250px;
+        background-color: #333;
+        color: white;
+        padding: 20px 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+      }
+
+      .sidebar-logo {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .sidebar-logo img {
+        max-width: 100px;
+        height: auto;
+      }
+
+      .sidebar-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar-nav ul li a {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+
+      .sidebar-nav ul li a:hover,
+      .sidebar-nav ul li a.active {
+        background-color: #575757;
+      }
+
+      .sidebar-nav ul li a svg {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+
+      /* Main Content Area */
+      .main-content {
+        flex-grow: 1;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      .header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #fff;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .search-bar input {
+        width: 300px;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+      }
+
+      .user-info span {
+        margin-right: 15px;
+        font-size: 0.9rem;
+        color: #555;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-left: 10px;
+      }
+      .profile-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-bottom: 20px;
+      }
+
+      .cover-image-placeholder {
+        background-color: #f0f0f0;
+        height: 120px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #777;
+        font-size: 1rem;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cover-image-placeholder input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+        position: relative;
+        top: -60px;
+        margin-bottom: -40px;
+        left: 20px;
+      }
+
+      .profile-picture {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 0 0 2px #ddd;
+      }
+
+      .profile-name {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+        margin-left: 20px;
+      }
+
+      .edit-profile-btn {
+        margin-left: auto;
+        background-color: #e0e0e0;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #555;
+        display: flex;
+        align-items: center;
+        position: relative;
+        top: -60px;
+      }
+
+      .edit-profile-btn svg {
+        margin-right: 5px;
+      }
+
+      .profile-details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 40px;
+        margin-top: -30px;
+      }
+
+      .detail-group label {
+        display: block;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .detail-group input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        background-color: #f9f9f9;
+      }
+
+      .billing-section {
+        margin-top: 30px;
+      }
+
+      .billing-section h2 {
+        font-size: 1.5rem;
+        color: #1f2937;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+      }
+      #content-frame {
+        width: 100%;
+        height: calc(100vh - 120px);
+        border: none;
+        background-color: #f3f4f6;
+        border-radius: 8px;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          padding: 15px 0;
+        }
+
+        .sidebar-nav ul {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .sidebar-nav ul li {
+          margin: 5px 10px;
+        }
+
+        .sidebar-nav ul li a {
+          padding: 10px 15px;
+        }
+
+        .header-bar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .search-bar {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+
+        .search-bar input {
+          width: calc(100% - 30px);
+        }
+
+        .user-info {
+          margin-top: 10px;
+        }
+
+        .profile-details-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .profile-header {
+          flex-direction: column;
+          align-items: flex-start;
+          top: -30px;
+          margin-bottom: -20px;
+          left: 0;
+        }
+        .profile-name {
+          margin-top: 10px;
+          margin-left: 0;
+        }
+        .edit-profile-btn {
+          margin-top: 15px;
+          position: static;
+          align-self: flex-end;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <img src="bizlogo.jpeg" alt="Biz4U Logo" />
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="#" class="active">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
+                />
+              </svg>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M16 11V3H8v8H2v10h20V11h-6zm-6 0V5h4v6h-4zM4 13h4v6H4v-6zm12 6h4v-6h-4v6z"
+                />
+              </svg>
+              Leaderboards
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M12 2L1 12h3v8h7v-5h2v5h7v-8h3L12 2zm0 5.76l4.24 4.24H7.76L12 7.76z"
+                />
+              </svg>
+              Courses
+            </a>
+          </li>
+          <li>
+            <a href="mylearnings.html" target="content-frame">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M14 10H2v2h12v-2zm0-4H2v2h12V6zm4 8v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2 16h8v-2H2v2z"
+                />
+              </svg>
+              My Learnings
+            </a>
+          </li>
+          <li>
+            <a href="badge.html" target="content-frame">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M12 11.55s-4.505-2.91-4.5-8.55h9c.005 5.64-4.5 8.55-4.5 8.55zM12 13.45s4.505 2.91 4.5 8.55h-9c-.005-5.64 4.5-8.55 4.5-8.55z"
+                />
+              </svg>
+              Certifications
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M12 4.419c-2.825-5.067-12-2.302-12 5.581 0 5.487 5.099 9.427 12 14.545 6.901-5.118 12-9.058 12-14.545 0-7.883-9.175-10.648-12-5.581z"
+                />
+              </svg>
+              Wishlist
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M18 6h-2c0-2.209-1.791-4-4-4s-4 1.791-4 4H6c-1.104 0-2 .896-2 2v14c0 1.104.896 2 2 2h12c1.104 0 2-.896 2-2V8c0-1.104-.896-2-2-2zm-6-2c1.103 0
+                />
+              </svg>
+              Order history
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M24 13.616v-3.232c-1.397-.042-2.613-.674-3.525-1.761l-2.581 1.737c-.365-.434-.784-.821-1.249-1.155l.899-2.734c-.958-.337-1.85-.882-2.639-1.61
+                />
+              </svg>
+              Settings
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 18c4.411 0 8-3.589 8-8s-3.589-8-8-8-8 3.589-8 8 3.589 8 8 8zm0-14c
+                />
+              </svg>
+              Help
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div class="main-content">
+      <header class="header-bar">
+        <div class="search-bar">
+          <input type="text" placeholder="Search for something" />
+        </div>
+        <div class="user-info">
+          <span>266 PX</span>
+          <img src="profile.webp" alt="User Avatar" class="user-avatar" />
+        </div>
+      </header>
+
+      <div class="profile-card">
+        <div class="cover-image-placeholder">
+          Add a cover image
+          <input type="file" />
+          Upload file
+        </div>
+        <div class="profile-header">
+          <img src="profile.webp" alt="Tara Teller" class="profile-picture" />
+          <div class="profile-name"></div>
+          <button class="edit-profile-btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-pencil"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 
+              />
+            </svg>
+            Edit
+          </button>
+        </div>
+
+        <div class="profile-details-grid">
+          <div class="detail-group">
+            <label for="your-name">Your Name</label>
+            <input type="text" id="your-name" value="" readonly />
+          </div>
+          <div class="detail-group">
+            <label for="user-name">User Name</label>
+            <input type="text" id="user-name" value="" readonly />
+          </div>
+          <div class="detail-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" value="" readonly />
+          </div>
+          <div class="detail-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" value="" readonly />
+          </div>
+        </div>
+
+        <div class="billing-section">
+          <h2>Billing</h2>
+          <div class="profile-details-grid">
+            <div class="detail-group">
+              <label for="billing-your-name">Your Name</label>
+              <input type="text" id="billing-your-name" value="" readonly />
+            </div>
+            <div class="detail-group">
+              <label for="contact-number">Contact Number</label>
+              <input type="text" id="contact-number" value="" readonly />
+            </div>
+            <div class="detail-group">
+              <label for="country">Country</label>
+              <input type="text" id="country" value="" readonly />
+            </div>
+            <div class="detail-group">
+              <label for="state">State</label>
+              <input type="text" id="state" value="" readonly />
+            </div>
+            <div class="detail-group">
+              <label for="city">City</label>
+              <input type="text" id="city" value="" readonly />
+            </div>
+            <div class="detail-group">
+              <label for="zip-code">Zip Code</label>
+              <input type="text" id="zip-code" value="" readonly />
+            </div>
+            <div class="detail-group">
+              <label for="address1">Address 1</label>
+              <input type="text" id="address1" value="" readonly />
+            </div>
+            <div class="detail-group">
+              <label for="address2">Address 2</label>
+              <input type="text" id="address2" value="" readonly />
+            </div>
+            <div class="detail-group">
+              <label for="company-name">Company Name</label>
+              <input type="text" id="company-name" value="" readonly />
+            </div>
+            <div class="detail-group">
+              <label for="company-vat-number">Company VAT Number</label>
+              <input type="text" id="company-vat-number" value="" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <iframe id="content-frame" name="content-frame" src=""></iframe>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const sidebarLinks = document.querySelectorAll(".sidebar-nav ul li a");
+        const contentFrame = document.getElementById("content-frame");
+
+        sidebarLinks.forEach((link) => {
+          link.addEventListener("click", function (event) {
+            event.preventDefault();
+            sidebarLinks.forEach((l) => l.classList.remove("active"));
+            this.classList.add("active");
+            const href = this.getAttribute("href");
+            if (href && href !== "#") {
+              if (href === "mylearnings.html") {
+                contentFrame.src = "mylearnings.html";
+              } else if (href === "badge.html") {
+                contentFrame.src = "badge.html";
+              } else {
+                contentFrame.src = "about:blank";
+              }
+            } else {
+              contentFrame.src = "about:blank";
+              document.querySelector(".profile-card").style.display = "block";
+            }
+            if (href === "mylearnings.html" || href === "badge.html") {
+              document.querySelector(".profile-card").style.display = "none";
+            } else {
+              document.querySelector(".profile-card").style.display = "block";
+            }
+          });
+        });
+        contentFrame.src = "about:blank";
+      });
+    </script>
+  </body>
+</html>
